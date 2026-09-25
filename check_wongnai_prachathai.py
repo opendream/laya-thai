@@ -1,8 +1,17 @@
 """Assert the shipped Wongnai and Prachathai transforms and train-only selections."""
 from __future__ import annotations
 
+import os
+
+os.environ.setdefault("USE_TF", "0")
+os.environ.setdefault("HF_HUB_OFFLINE", "1")
+os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
+os.environ.setdefault("HF_DATASETS_OFFLINE", "1")
+
 import convert_prachathai
 import convert_wongnai
+import train_massive
+from transformers import AutoTokenizer
 
 
 def _thai(text: str) -> bool:
@@ -29,9 +38,22 @@ def check_wongnai() -> None:
         assert all(_thai(text) and str(n) in text for n, text in enumerate(question["criteria"], start=1))
         gold = row["gold"]["rating"]
         assert gold["label"] == star
-        assert gold["probabilities"][str(star)] == 1.0
-        assert sum(gold["probabilities"].values()) == 1.0
-        assert list(gold["probabilities"]) == ["1", "2", "3", "4", "5"]
+        # Same index keys rows_to_items reads: rung 0 is star 1, rung 4 is star 5.
+        target = [float(gold["probabilities"].get(str(i), 0.0)) for i in range(5)]
+        assert target == [1.0 if i == star - 1 else 0.0 for i in range(5)]
+        assert gold["probabilities"]["4"] == (1.0 if star == 5 else 0.0)
+        assert "5" not in gold["probabilities"]
+    src = train_massive.multilingual_snapshot()
+    tok = AutoTokenizer.from_pretrained(str(src / "tokenizer"))
+    built = [
+        convert_wongnai.to_laya_row("ร้านนี้ดี", star)
+        for star in range(1, 6)
+    ]
+    items = train_massive.rows_to_items(built, tok, {"max_len": 1024, "head_max_len": 256})
+    assert len(items) == 5
+    for star, item in zip(range(1, 6), items):
+        assert item["target"] == [1.0 if i == star - 1 else 0.0 for i in range(5)]
+        assert item["label"] == star - 1
 
 
 def check_prachathai() -> None:

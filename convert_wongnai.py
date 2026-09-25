@@ -65,7 +65,7 @@ def to_laya_row(review: str, star: int) -> dict:
         "gold": {
             "rating": {
                 "label": star,
-                "probabilities": {str(n): (1.0 if n == star else 0.0) for n in range(1, 6)},
+                "probabilities": {str(i): (1.0 if i == star - 1 else 0.0) for i in range(5)},
             }
         },
     }
