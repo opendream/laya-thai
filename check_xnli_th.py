@@ -15,8 +15,8 @@ def main() -> None:
 
     out = convert_xnli_th.output_path()
     assert out.name == "xnli_th.train.jsonl"
-    assert out.name != "massive_th.train.jsonl"
-    assert out.name != "massive_th.test.jsonl"
+    assert convert_xnli_th.training_split() == "train"
+    assert out.name.startswith("xnli_th.")
 
     for label in convert_xnli_th.LABELS:
         row = convert_xnli_th.to_laya_row("ประโยคแรก", "ประโยคที่สอง", label)

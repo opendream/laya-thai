@@ -96,7 +96,9 @@ def write_jsonl(path: Path, rows: list[dict]) -> None:
 
 def convert(limit: int | None = None) -> Path:
     from datasets import load_dataset
+    from datasets.utils.logging import set_verbosity_error
 
+    set_verbosity_error()
     split = training_split()
     ds = load_dataset(DATASET, CONFIG, split=split)
     k = SLICE if limit is None else limit
