@@ -1,0 +1,27 @@
+{
+  "files": [
+    {
+      "file": "massive_th.train.jsonl",
+      "rows": 11514
+    },
+    {
+      "file": "xnli_th.train.jsonl",
+      "rows": 20000
+    },
+    {
+      "file": "wongnai_full.train.jsonl",
+      "rows": 40000
+    },
+    {
+      "file": "prachathai.train.jsonl",
+      "rows": 25000
+    },
+    {
+      "file": "massive_en.train.jsonl",
+      "rows": 11514
+    }
+  ],
+  "total": 108028,
+  "init": "/Users/keng/Work/laya-thai/checkpoints/mix_rlcd/epoch_02",
+  "epochs": 2
+}

@@ -11,3 +11,13 @@ wheels/
 
 # Local fine-tune weights
 checkpoints/
+
+# Hub upload folder (weights are copied here)
+hf-publish/
+
+# Run logs
+*.log
+
+# Merged train files are over GitHub's 100 MB limit. Rebuild them locally.
+data/train.jsonl
+data/train_wongnai_heavy.jsonl

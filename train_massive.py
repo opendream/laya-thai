@@ -229,7 +229,16 @@ def link_selected(out_dir: Path, epoch: int) -> Path:
     return link
 
 
-def fit(items: list[dict], model, tok, cfg: dict, src: Path, out_dir: Path, device: torch.device) -> Path:
+def fit(
+    items: list[dict],
+    model,
+    tok,
+    cfg: dict,
+    src: Path,
+    out_dir: Path,
+    device: torch.device,
+    epoch_limit: int | None = None,
+) -> Path:
     enc = [p for name, p in model.named_parameters() if name.startswith("encoder.")]
     head = [p for name, p in model.named_parameters() if not name.startswith("encoder.")]
     if not enc or not head:
@@ -252,7 +261,7 @@ def fit(items: list[dict], model, tok, cfg: dict, src: Path, out_dir: Path, devi
         flush=True,
     )
     opt_steps = 0
-    limit = BASE_EPOCHS
+    limit = BASE_EPOCHS if epoch_limit is None else epoch_limit
     val_accs: list[float] = []
     epoch_index = 0
     while epoch_index < limit:
@@ -322,7 +331,7 @@ def fit(items: list[dict], model, tok, cfg: dict, src: Path, out_dir: Path, devi
         _n, acc, line = score_validation(ckpt)
         val_accs.append(acc)
         print(line, flush=True)
-        if epoch_num == BASE_EPOCHS:
+        if epoch_limit is None and epoch_num == BASE_EPOCHS:
             extend = extend_after_four(val_accs[2], val_accs[3])
             print(
                 f"extend={int(extend)} epoch3_acc={val_accs[2]:.3f} epoch4_acc={val_accs[3]:.3f}",

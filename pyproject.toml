@@ -1,0 +1,14 @@
+[project]
+name = "laya-thai-kit"
+version = "0.1.0"
+description = "Test, convert, and evaluate Thai Laya (MASSIVE-th)"
+requires-python = ">=3.12"
+dependencies = [
+  "laya>=0.3.6",
+  "datasets",
+  "numpy",
+  "huggingface-hub",
+]
+
+[tool.uv]
+package = false

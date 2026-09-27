@@ -1,0 +1,25 @@
+{
+  "files": [
+    {
+      "file": "massive_th.train.jsonl",
+      "rows": 11514
+    },
+    {
+      "file": "xnli_th.train.jsonl",
+      "rows": 20000
+    },
+    {
+      "file": "wongnai.train.jsonl",
+      "rows": 15000
+    },
+    {
+      "file": "prachathai.train.jsonl",
+      "rows": 25000
+    },
+    {
+      "file": "massive_en.train.jsonl",
+      "rows": 11514
+    }
+  ],
+  "total": 83028
+}

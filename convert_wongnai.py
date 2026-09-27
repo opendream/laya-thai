@@ -96,6 +96,27 @@ def class_names(ds) -> list[str] | None:
     return [str(name) for name in names]
 
 
+def convert_all() -> Path:
+    """Every labeled train review. The 15k slice file is left as it is."""
+    from datasets import load_dataset
+    from datasets.utils.logging import disable_progress_bar, set_verbosity_error
+
+    disable_progress_bar()
+    set_verbosity_error()
+    split = training_split()
+    ds = load_dataset(DATASET, split=split)
+    names = class_names(ds)
+    rows = []
+    for row in ds:
+        if row.get("star_rating") is None or not row.get("review_body"):
+            continue
+        rows.append(to_laya_row(row["review_body"], coerce_star(row["star_rating"], names)))
+    dest = Path("data") / "wongnai_full.train.jsonl"
+    write_jsonl(dest, rows)
+    print(f"split={split} rows={len(rows)} -> {dest}")
+    return dest
+
+
 def convert() -> Path:
     from datasets import load_dataset
     from datasets.utils.logging import disable_progress_bar, set_verbosity_error
